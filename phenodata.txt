@@ -1,0 +1,9 @@
+filenames samplenames targets
+ROS1-_9.CEL ROS1-_9 minus
+ROS1+_10.CEL ROS1+_10 plus
+ROS1-_11.CEL ROS1-_11 minus
+ROS1+_12.CEL ROS1+_12 plus
+ROS1-_13.CEL ROS1-_13 minus
+ROS1+_14.CEL ROS1+_14 plus
+ROS1-_15.CEL ROS1-_15 minus
+ROS1+_16.CEL ROS1+_16 plus
