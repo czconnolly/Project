@@ -1,0 +1,18 @@
+> head(annotResults[order(annotResults$padj),])
+DataFrame with 6 rows and 9 columns
+     ensembl_gene_id external_gene_id         affy_chicken  baseMean log2FoldChange
+         <character>      <character>          <character> <numeric>      <numeric>
+1 ENSGALG00000020380                                       44.948519      -2.701339
+2 ENSGALG00000008845             HAO1 GgaAffx.5556.1.S1_at 36.857103      -2.277736
+3 ENSGALG00000000703          SLC45A3  GgaAffx.443.1.S1_at 49.165302      -2.048396
+4 ENSGALG00000000703          SLC45A3    Gga.12981.1.S1_at 49.165302      -2.048396
+5 ENSGALG00000014764           HSD3B2      Gga.596.1.S2_at  9.633951       2.107848
+6 ENSGALG00000014764           HSD3B2      Gga.596.1.S1_at  9.633951       2.107848
+      lfcSE      stat       pvalue         padj
+  <numeric> <numeric>    <numeric>    <numeric>
+1 0.3897362 -6.931200 4.172849e-12 5.914596e-08
+2 0.4382144 -5.197765 2.016988e-07 1.429439e-03
+3 0.4280154 -4.785799 1.703083e-06 8.046502e-03
+4 0.4280154 -4.785799 1.703083e-06 8.046502e-03
+5 0.4524652  4.658587 3.183878e-06 1.128207e-02
+6 0.4524652  4.658587 3.183878e-06 1.128207e-02
