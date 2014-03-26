@@ -1,0 +1,6 @@
+par(mfrow=c(2,2))
+plot(dt.upgmaSLC45A3, ylab='residuals', cex=0.5,main='UPGMA')
+plot(dt.fastmeSLC45A3, ylab='residuals', cex=0.5,main='FASTME')
+plot(dt.njSLC45A3, ylab='residuals', cex=0.5,main='NJ')
+plot(dt.bionjSLC45A3,ylab='residuals', cex=0.5, main='BIONJ')
+abline(h=0, lty=3)
