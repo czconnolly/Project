@@ -1,14 +1,10 @@
-# Example of MicroArray Analysis taken from 
-# adapted from
-#		analysing-microarray-data-in-bioconductor
-# on
-#		http://bioinformatics.knowledgeblog.org
-#
-# download the BioC installation routines
-#source("http://bioconductor.org/biocLite.R")
-#biocLite()
-#biocLite("GEOquery")
-#biocLite("hgu133plus2.db")
+# script to calculate differential expression and plot raw/normalised data using LIMMA on the microarray data
+
+#install and require the necessary packages
+source("http://bioconductor.org/biocLite.R")
+biocLite()
+biocLite("GEOquery")
+biocLite("hgu133plus2.db")
 library(ggplot2)
 library(reshape2)
 library(GEOquery)
@@ -22,7 +18,7 @@ library(genefilter)
 library(limma)
 
 .ggboxIt <- function(dfin,pdfname)
-{	# draw a ggplot boxplot of data frame produced by .summarise.it()
+{	# makes a boxplot of the data from .summariseIt function
 	gp <- ggplot(dfin, aes(x = name, ymin = lwisk, lower = lbox,
 													 middle = mid, upper = ubox,
 													 ymax = uwisk, fill = name))
@@ -33,8 +29,8 @@ library(limma)
 }
 
 .summariseIt <- function(dfraw,phenoData)
-{ # create quantile data from a dataframe of depths
-  # useful for munging into ggplot, however probably a plyr function for this too
+{ # creates quantile data from a dataframe of depths
+  
 	dfin <- melt(dfraw)
 	colnames(dfin) <- c("probeId","sample","value")
 	dfin$group<-factor(dfin$sample)
@@ -50,38 +46,28 @@ library(limma)
 }
 
 .getData <- function()
-{
+{	#sets working directory
 	baseDir <- "/homes/czconnolly/BS32010/Project"
-	#if(!file.exists(paste0(baseDir,"GSE20986")))
-	#{
-	#	getGEOSuppFiles("*.CEL",baseDir=baseDir)
-	#}
 	workingDir=paste0(baseDir)
-	#if(!exists(workingDir))
-	#{
-	#	dir.create(workingDir)
-	#}
-	#untar(paste0(baseDir,"GSE20986/GSE20986_RAW.tar"), #exdir=workingDir,
-			# 	tar="tar")
+	# input file names 
 	filenames <- c("ROS1-_9.CEL", "ROS1+_10.CEL", "ROS1-_11.CEL",
 							"ROS1+_12.CEL", "ROS1-_13.CEL", "ROS1+_14.CEL",
 							"ROS1-_15.CEL", "ROS1+_16.CEL")
+	# input sample names
 	samplenames <- c("ROS1-_9", "ROS1+_10", "ROS1-_11",
   						"ROS1+_12", "ROS1-_13", "ROS1+_14",
 							"ROS1-_15", "ROS1+_16")
+	#input the treatments to match the samples
 	targets <- c("minus", "plus", "minus", "plus", "minus", "plus",
 						"minus", "plus")
-
+	#create a table of the filenames,samplenames, and targets
 	phenodata<-as.data.frame(cbind(filenames,samplenames,targets))
 	write.table(phenodata,paste(workingDir,"phenodata.txt",sep="/")
 							,quote=F,row.name=F)
 	celRAW <- ReadAffy(celfile.path=workingDir,compress=T,
-										 phenoData=phenodata)
-	#arrayQualityMetrics(expressionset=celRAW,
-	#										outdir=paste0(baseDir,"celRAW_AQM"),
-	#										force=T,do.logtransform=T)
+	
 }
-
+#plot the probe intensities
 .plotDensity <- function(exps,filename)
 {
 	pdf(filename)
@@ -127,14 +113,14 @@ library(limma)
 
 .doCluster <- function(celRMA)
 {
-#Quick and dirty clustering much better use pvclust
-#Clustering like normalization is a bit of a black art
+#clusters the data, and makes a boxplot
+
 	eset <- exprs(celRMA)
 	distance <- dist(t(eset),method="maximum")
 	clusters <- hclust(distance)
 	plot(clusters)
 }
-
+#filters the data
 .doFilter <- function(celRMA)
 {
 	celfiles.filtered <- nsFilter(celRMA, 
@@ -157,20 +143,10 @@ library(limma)
 # fit the linear model to the filtered expression set
 	fit <- lmFit(exprs(eset), design)
 
-# set up a contrast matrix to compare tissues v cell line
-#	contrast.matrix <- makeContrasts(+/- = huvec - choroid,
-#																 huvec_retina = huvec - #retina, 
-#																 huvec_iris <- huvec - #iris, 
-#																 levels=design)
-
-# check the contrast matrix
-#	contrast.matrix
-
-# Now the contrast matrix is combined with the per-probeset linear model fit.
-	fit<- lmFit(exprs(eset), design)
+# compute moderated t-statistics, moderated F-statistic, and log-odds of 
+#differential expression by empirical Bayes shrinkage of the standard errors towards a common value.
 	plus_ebFit <- eBayes(fit)
 # return the top 10 results for any given contrast
-# coef=1 is huvec_choroid, coef=2 is huvec_retina
 	ttab <- topTable(plus_ebFit, number=30000, coef=1)
 
 	nrow(topTable(plus_ebFit, coef=1, number=30000, lfc=5))
@@ -179,7 +155,7 @@ library(limma)
 	nrow(topTable(plus_ebFit, coef=1, number=30000, lfc=2))
 # Get a list for probesets with a four fold change or more
 	tTable <- topTable(plus_ebFit, number=30000, p.value=0.05)
-
+#annotate the results
 	annotation <- as.data.frame(select(chicken.db,
 																		 rownames(tTable), 
 																		 c("ENSEMBL","SYMBOL")))
@@ -190,18 +166,18 @@ library(limma)
 	write.table(results, "results.txt", sep="\t", quote=FALSE)
 	return(results)
 }
-
+#a loop to carry out limma analysis if celResults exists
 if(!exists("celResults"))
 {
 	celRAW <- .getData()
 	eset<-exprs(celRAW)
-	#celGCRMA <- gcrma(celRAW)
+	celGCRMA <- gcrma(celRAW)
 	celRMA <- rma(celRAW)
 	.ggboxIt(.summariseIt(log2(exprs(celRAW))),"sumRAW.pdf")
 	.ggboxIt(.summariseIt(exprs(celRMA)),"sumRMA.pdf")
 	.plotDensity(log2(exprs(celRAW)),"densityRAW.pdf")
 	.plotDensity(log2(exprs(celRMA)),"densityRMA.pdf")
-	#celFilt <- .doFilter(celRMA)
-	#celResults <- .doDE(celFilt$eset)
+	celFilt <- .doFilter(celRMA)
+	celResults <- .doDE(celFilt$eset)
 
 }
