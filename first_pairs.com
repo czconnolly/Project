@@ -1,3 +1,4 @@
+#Script to set the values for AMPS alignments
 output_file=SLC45A3alignment.out
 print_horizontal=
 mode=pairwise
