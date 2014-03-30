@@ -4,12 +4,12 @@ library(affyPLM)
 library(annotate)
 library(chicken.db)
 library(limma)
-#setwd("~/BS32010/Projectgit")
+
 data=ReadAffy()
 ed=exprs(data)
 samp=sampleNames(data)
 probes=featureNames(data)
-#graphs for non-normalised data
+#plots graphs for non-normalised data
 png("ROS1.png", width = 1920, height = 1080, units = "px")
 plot(ed[,"ROS1-_9.CEL"], ed[,"ROS1+_10.CEL"], xlab='ROS1-_9', ylab='ROS1+_10', main='ROS1')
 dev.off()
@@ -23,7 +23,7 @@ png("ROS4.png", width = 1920, height = 1080, units = "px")
 plot(ed[,"ROS4-_15.CEL"], ed[,"ROS4+_16.CEL"], xlab='ROS4-_15', ylab='ROS4+_16', main='ROS4')
 dev.off()
 
-#normalisation
+#plots graphs of normalised data
 nvals=rma(data)
 ned=exprs(nvals)
 nsamp=sampleNames(nvals)
