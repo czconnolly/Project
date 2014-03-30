@@ -1,3 +1,4 @@
+#Script to plot scatter graphs
 source("http://bioconductor.org/biocLite.R")
 library(affy)
 library(affyPLM)
