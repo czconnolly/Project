@@ -1,6 +1,0 @@
-#par(mfrow=c(1,1))
-plot(dt.upgmaALDH1A2, ylab='residuals', cex=0.5,main='UPGMA')
-#plot(dt.fastmeALDH1A2, ylab='residuals', cex=0.5,main='FASTME')
-#plot(dt.njALDH1A2, ylab='residuals', cex=0.5,main='NJ')
-#plot(dt.bionjALDH1A2,ylab='residuals', cex=0.5, main='BIONJ')
-abline(h=0, lty=3)
