@@ -27,3 +27,11 @@ annotResults.txt is the unsorted results from the RNASeq.R analysis
 celResults.txt is the unsorted results file from the affycode.R analysis
 top6diffexp.txt is the top 6 results from annotResults.txt when sorted by adjusted p value
 top6affy.txt is the top 6 results from celResults.txt when sorted by adjusted p value
+
+
+Data
+
+RNAseqCounts.txt - Raw data from RNA-Seq
+
+
+The other files are from AMPS alignments. Unfortunately I used the wrong score matrix when carrying this out and due to that it only worked for 3 out of the 4 genes.   
