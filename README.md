@@ -20,4 +20,10 @@ projectstuff.R - This script plots the residuals together
 Results
 
 All of the residuals.png, trees.png, bootstrap.png, and modeltest.csv files contain the results of the phylogenetic analysis carried out on each gene.
-
+The ROS1.png, ROS1Normalisd.png etc. show the results from script to get plots.R
+densityRAW.pdf and densityRMA.pdf contain the histograms of before and after normalisation respectively.
+sumRAW and sumRMA.pdf contain the boxplots of before and after normalisation respectively. 
+annotResults.txt is the unsorted results from the RNASeq.R analysis
+celResults.txt is the unsorted results file from the affycode.R analysis
+top6diffexp.txt is the top 6 results from annotResults.txt when sorted by adjusted p value
+top6affy.txt is the top 6 results from celResults.txt when sorted by adjusted p value
